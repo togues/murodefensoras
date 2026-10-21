@@ -35,6 +35,10 @@
   --r-s:8px; --r-m:12px; --r-full:999px;
   --e1:0 1px 2px rgba(33,33,33,.06),0 2px 6px rgba(33,33,33,.05);
   --e2:0 2px 6px rgba(33,33,33,.07),0 8px 20px rgba(33,33,33,.07);
+  /* Diseño fluido: el margen lateral crece con la pantalla y el
+     contenido llega hasta 1920 px, para que en un monitor grande no
+     quede una columna angosta en el medio. */
+  --gutter:clamp(16px,4vw,72px); --ancho-max:1920px;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 /* Cada familia trae sus tres formas en variables locales: las piezas
@@ -49,7 +53,7 @@
 body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface);line-height:1.55;font-size:15px}
 /* Más ancho que antes (760px) para que quepan dos tarjetas grandes por
    fila en escritorio — ver .feed más abajo. */
-.envoltura{max-width:1080px;margin:0 auto;padding:0 16px 60px}
+.envoltura{max-width:var(--ancho-max);margin:0 auto;padding:0 var(--gutter) 64px}
 
 /* Sistema de íconos — mismo criterio que app/ y panel/: el sprite no
    se dibuja, el trazo (no el relleno) lleva el color. */
@@ -65,7 +69,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .franja-marca i:nth-child(1){background:var(--naranja)}.franja-marca i:nth-child(2){background:var(--azul)}
 .franja-marca i:nth-child(3){background:var(--ambar)}.franja-marca i:nth-child(4){background:var(--verde)}
 .nav-top{background:var(--tinta);color:#fff}
-.nav-top__envoltura{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;
+.nav-top__envoltura{max-width:var(--ancho-max);margin:0 auto;padding:14px var(--gutter);display:flex;align-items:center;
   justify-content:space-between;gap:20px;flex-wrap:wrap}
 .nav-top__marca{display:flex;align-items:center;gap:11px}
 .nav-top__icono{width:34px;height:34px;border-radius:50%;background:var(--naranja);color:var(--tinta);
@@ -98,7 +102,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
    para acercarse a la maqueta de referencia que a Marco le gustó
    (2026-09-20), con el mismo paisaje propio detrás. */
 .hero{position:relative;background:var(--tinta);color:#fff;
-  padding:64px 16px 40px;overflow:hidden;isolation:isolate}
+  padding:clamp(48px,7vw,120px) var(--gutter) clamp(36px,4vw,64px);overflow:hidden;isolation:isolate}
 /* Foto opcional (img/portada.jpg). La capa oscura es la que deja leer
    el título encima de cualquier foto, como en el banner de PROLEMPA. */
 .hero-foto{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s}
@@ -139,15 +143,15 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .hero-resplandor{position:absolute;top:-14%;left:6%;width:520px;max-width:90%;
   aspect-ratio:1.6;background:radial-gradient(ellipse at center,rgba(228,103,47,.16),transparent 70%);
   z-index:0;pointer-events:none}
-.hero-contenido{position:relative;z-index:1;max-width:1080px;margin:0 auto}
+.hero-contenido{position:relative;z-index:1;max-width:var(--ancho-max);margin:0 auto}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
   color:#f1ecea;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
   border-radius:var(--r-full);padding:5px 13px 5px 11px;margin-bottom:16px}
 .hero-eyebrow__punto{width:6px;height:6px;border-radius:50%;background:var(--naranja);flex:none}
-.hero h1{font-size:clamp(32px,3vw + 26px,54px);font-weight:800;letter-spacing:-.02em;max-width:620px;margin:0 0 16px;line-height:1.05;
+.hero h1{font-size:clamp(34px,2.6vw + 22px,80px);font-weight:800;letter-spacing:-.02em;max-width:16ch;margin:0 0 16px;line-height:1.05;
   text-shadow:0 1px 18px rgba(0,0,0,.18)}
 .hero-destacado{display:block;color:var(--naranja)}
-.hero p{font-size:16.5px;color:#e6e0de;max-width:560px}
+.hero p{font-size:clamp(16px,.35vw + 14.5px,20px);color:#e6e0de;max-width:60ch}
 /* Botón del banner: naranja de marca con texto en tinta. El blanco
    sobre este naranja da 3,3:1, que no alcanza para texto chico. */
 .hero-boton{display:inline-block;margin-top:22px;background:var(--naranja);color:var(--tinta);font-weight:800;
@@ -162,7 +166,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .hero .stats span{font-size:11px;color:#c9c2bf;text-transform:uppercase;letter-spacing:.05em}
 
 @media(max-width:480px){
-  .hero{padding:44px 16px 26px}
   /* h1 ya escala solo con clamp() — acá solo se ajusta lo que clamp
      no cubre: el espaciado de las tarjetas de estadísticas, que con
      el padding de escritorio (14px 22px) se ven apretadas en un
@@ -187,7 +190,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
    elegida se marca con una barra inferior y el disco en negro, no solo
    con color. */
 .franjas{display:grid;grid-template-columns:repeat(4,1fr)}
-.filtro-pill.franja{border:none;border-radius:0;background:var(--f-marca);color:var(--tinta);padding:20px 22px;
+.filtro-pill.franja{border:none;border-radius:0;background:var(--f-marca);color:var(--tinta);padding:clamp(16px,1.6vw,26px) clamp(14px,2vw,var(--gutter));
   font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:12px;justify-content:flex-start;
   box-shadow:inset 0 -5px 0 transparent;transition:box-shadow .15s,filter .15s}
 .filtro-pill.franja:hover{transform:none;filter:brightness(1.05)}
@@ -196,7 +199,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .filtro-pill.franja.act .franja__disco{background:var(--tinta);color:#fff}
 .franja__texto{flex:1;text-align:left;white-space:normal;line-height:1.2}
 .filtro-pill.franja .filtro-pill__n{background:rgba(33,33,33,.14);color:var(--tinta);font-size:12.5px;padding:2px 9px}
-@media(max-width:760px){.franjas{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.franjas{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:380px){.filtro-pill.franja{padding:16px 14px;font-size:14px}.franja__disco{width:36px;height:36px;padding:8px}}
 .filtro-pill__n{background:rgba(0,0,0,.08);border-radius:var(--r-full);padding:1px 7px;font-size:11px;font-weight:700}
 .filtro-pill.act .filtro-pill__n{background:rgba(0,0,0,.12)}
@@ -221,7 +224,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 
 /* Dos columnas en pantallas anchas — una sola en teléfono (ver el
    @media al final). */
-.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:16px}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:clamp(14px,1.4vw,24px);margin-top:18px}
 .tarjeta{background:var(--surface);border:1px solid var(--outline-var);border-top:5px solid var(--f-marca,var(--linea));border-radius:var(--r-m);padding:22px;
   box-shadow:var(--e1);opacity:0;animation:tarjeta-entra .4s cubic-bezier(.16,.8,.3,1) forwards;
   animation-delay:calc(var(--i, 0) * 45ms);transition:transform .16s,box-shadow .16s;
