@@ -3,20 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Nombre PROVISIONAL — ACUA todavía no definió cómo llamar esto
-     (Marco, 2026-09-19). Cambiar acá y en el <h1> del hero cuando lo
-     confirmen. -->
 <title>Voces del Territorio — Observatorio Comunitario</title>
 <meta name="description" content="Necesidades y logros de las comunidades del territorio, contados por quienes los viven.">
 <link rel="stylesheet" href="css/muro.css">
 </head>
 <body>
-<!-- Sprite de íconos — mismo sistema que app/ y panel/ (línea, trazo
-     2px, sin relleno): las tres aplicaciones se sienten de la misma
-     familia. Cuatro son el mismo símbolo que ya usaba familia por
-     familia (antes trazos SVG sueltos en main.js); i-compartir es
-     nuevo, para los botones de WhatsApp/Facebook/Compartir, que no
-     tenían ícono todavía aunque el CSS ya los esperaba. -->
 <svg class="sprite" aria-hidden="true" focusable="false"><defs>
   <symbol id="i-persona" viewBox="0 0 24 24"><circle cx="12" cy="7.6" r="3.8"/><path d="M5 20.4a7 7 0 0 1 14 0"/></symbol>
   <symbol id="i-gota" viewBox="0 0 24 24"><path d="M12 3.2c0 0-6.4 7-6.4 10.6a6.4 6.4 0 0 0 12.8 0C18.4 10.2 12 3.2 12 3.2z"/></symbol>
@@ -33,16 +24,6 @@
   <symbol id="i-descargar" viewBox="0 0 24 24"><path d="M12 3.4v10.2"/><path d="m7.8 9.6 4.2 4.2 4.2-4.2"/><path d="M4.2 16.2v2.6a1.8 1.8 0 0 0 1.8 1.8h12a1.8 1.8 0 0 0 1.8-1.8v-2.6"/></symbol>
 </defs></svg>
 
-<!-- Menú superior — pedido explícito de Marco (2026-09-20) tomando la
-     maqueta de referencia como norte. "Datos y Tendencias", "Metodología"
-     y "Acerca de la Red" NO son pantallas reales todavía: son la lista
-     de temas que se le va a preguntar a ACUA en la próxima reunión ("si
-     quiere que también aparezcan tendencias en una gráfica"). Por eso
-     son <button>, no <a href>: no hay a dónde navegar todavía, y un
-     enlace roto en un sitio público real es peor que un botón que avisa
-     con honestidad que esa sección está en definición. -->
-<!-- Franja de cuatro colores, uno por familia de hecho (paleta tomada
-     de PROLEMPA, 2026-10-21): es la firma visual del muro. -->
 <div class="franja-marca" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="nav-top">
   <div class="nav-top__envoltura">
@@ -61,31 +42,14 @@
     </nav>
   </div>
 </header>
-<div id="nav-toast" class="nav-toast" role="status" hidden>Esta sección todavía no existe — se está definiendo con ACUA.</div>
+<div id="nav-toast" class="nav-toast" role="status" hidden>Esta sección todavía no existe: se está preparando.</div>
 
 <header class="hero" id="hero">
-  <!-- Foto de portada OPCIONAL: si existe img/portada.jpg (paisaje, agua;
-       nunca personas reconocibles), main.js la pone detrás con una capa
-       oscura para que el texto se lea. Sin foto, queda el paisaje
-       ilustrado sobre el fondo institucional. -->
   <div class="hero-foto" aria-hidden="true"></div>
-  <!-- Paisaje decorativo — no es parte del sprite de íconos (esos son
-       funcionales, trazo sin relleno); esto es ambientación de fondo,
-       con relleno translúcido a propósito, para que se lea como una
-       ilustración y no como un ícono más. Sin gente ni un lugar
-       puntual: monte, agua y árboles en línea, genérico a propósito —
-       no hay fotos reales del territorio todavía (Marco, 2026-09-19),
-       y una foto de banco de imágenes haría parecer que es un lugar
-       específico que no es. -->
   <svg class="hero-paisaje" viewBox="0 0 900 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
     <path class="monte monte--lejos" d="M0,150 L110,75 L210,120 L330,55 L460,130 L590,80 L710,135 L820,95 L900,140 L900,220 L0,220 Z"/>
     <path class="monte monte--cerca" d="M0,185 L100,120 L200,165 L320,100 L440,175 L560,125 L680,178 L800,135 L900,175 L900,220 L0,220 Z"/>
     <path class="rio" d="M-10,205 C100,185 150,218 250,198 C350,178 400,212 500,193 C600,173 650,208 750,188 C820,173 860,193 910,183"/>
-    <!-- Cada árbol: un <g> externo fija su posición con el atributo SVG
-         transform (translate/scale) y NUNCA lleva animación CSS — una
-         animación CSS de "transform" pisa por completo ese atributo y
-         el árbol saltaría al origen. El mecido va en el <g> interno
-         "arbol-mece", con transform-origin en la base del tronco. -->
     <g class="arboles">
       <g transform="translate(60,172) scale(.75)"><g class="arbol-mece" style="transform-origin:0px 27px"><circle cx="0" cy="0" r="13"/><line x1="0" y1="11" x2="0" y2="27"/></g></g>
       <g transform="translate(180,178) scale(.7)"><g class="arbol-mece" style="transform-origin:0px 27px"><circle cx="0" cy="0" r="13"/><line x1="0" y1="11" x2="0" y2="27"/></g></g>
@@ -95,16 +59,11 @@
       <g transform="translate(640,172)"><g class="arbol-mece" style="transform-origin:0px 27px"><circle cx="0" cy="0" r="13"/><line x1="0" y1="11" x2="0" y2="27"/></g></g>
       <g transform="translate(790,180) scale(.85)"><g class="arbol-mece" style="transform-origin:0px 27px"><circle cx="0" cy="0" r="13"/><line x1="0" y1="11" x2="0" y2="27"/></g></g>
     </g>
-    <!-- Un par de pájaros — dos trazos en "M" muy livianos, cruzando
-         despacio de un lado al otro. Sin relleno, a diferencia del
-         monte: son marca de trazo, como el sprite de íconos. -->
     <g class="pajaros">
       <path class="pajaro pajaro--1" d="M0,0 q6,-9 12,0 q6,-9 12,0" transform="translate(120,52)"/>
       <path class="pajaro pajaro--2" d="M0,0 q5,-7 10,0 q5,-7 10,0" transform="translate(680,38) scale(.85)"/>
     </g>
   </svg>
-  <!-- Resplandor suave detrás del título — no es una foto, es solo un
-       poco de foco visual para que el h1 se sienta más protagonista. -->
   <div class="hero-resplandor" aria-hidden="true"></div>
   <div class="hero-contenido">
     <span class="hero-eyebrow"><span class="hero-eyebrow__punto"></span>Plataforma pública del Observatorio Comunitario</span>
@@ -115,9 +74,6 @@
   </div>
 </header>
 
-<!-- Las cuatro franjas de familia, como los bloques de PROLEMPA, pero
-     con función: son los filtros. Texto en negro sobre el color (no
-     blanco): el blanco sobre verde o ámbar no se lee (1,7:1 y 2:1). -->
 <nav class="franjas" aria-label="Filtrar por tipo">
   <button type="button" class="filtro-pill franja" data-f="persona" data-familia="persona"><span class="franja__disco"><svg class="i"><use href="#i-persona"/></svg></span><span class="franja__texto">A personas</span><span class="filtro-pill__n" data-conteo="persona"></span></button>
   <button type="button" class="filtro-pill franja" data-f="territorio" data-familia="territorio"><span class="franja__disco"><svg class="i"><use href="#i-gota"/></svg></span><span class="franja__texto">Agua y tierra</span><span class="filtro-pill__n" data-conteo="territorio"></span></button>
@@ -136,7 +92,7 @@
   </div>
 
   <div class="seccion-cab">
-    <div><h2>Registro público territorial</h2><p>Casos y logros ya revisados por REDNA antes de publicarse.</p></div>
+    <div><h2>Registro público territorial</h2><p>Casos y logros revisados por el equipo del observatorio antes de publicarse.</p></div>
     <span class="seccion-cab__orden">Más recientes primero</span>
   </div>
 
@@ -144,10 +100,6 @@
   <div id="paginacion" style="text-align:center;margin-top:16px"></div>
 </div>
 
-<!-- Pie institucional (21 de octubre de 2026): cierra la página con el
-     negro institucional y la franja de cuatro colores. Solo dice cosas
-     ciertas: quién hace el proyecto y cómo se cuida la información. Sin
-     datos de contacto: no hay ninguno definido todavía. -->
 <footer class="pie">
   <div class="franja-marca" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="pie__envoltura">
@@ -166,16 +118,9 @@
       <button type="button" data-proximamente>Acerca de la Red</button>
     </nav>
     <div class="pie__col">
-      <h2>Un proyecto de</h2>
-      <p class="pie__org">ACUA</p>
-      <p class="pie__con">Con el acompañamiento de</p>
-      <p class="pie__org">Ingeniería Sin Fronteras</p>
-      <p class="pie__org">Agencia Catalana de Cooperación al Desarrollo</p>
-    </div>
-    <div class="pie__col">
       <h2>Cómo cuidamos la información</h2>
       <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Nada de lo publicado identifica a una persona.</p>
-      <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Cada publicación la revisa y la redacta REDNA.</p>
+      <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Cada publicación la revisa y la redacta una persona del equipo.</p>
       <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Nunca se muestra el lugar exacto, solo el cantón o el departamento.</p>
     </div>
   </div>

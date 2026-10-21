@@ -1,21 +1,3 @@
-/* Muro público.
-
-   PALETA (21 de octubre de 2026): el cliente dijo que los colores del
-   muro "estaban tristes". Marco tomó la paleta de PROLEMPA (CARE
-   Honduras): naranja #e4672f, verde #b6d066, ámbar #e0b34f, azul
-   #6dafdf y el negro institucional #212121. Se toma SOLO la paleta; la
-   tipografía sigue siendo la nuestra.
-
-   Reglas que vienen con la paleta (sistema "Lempa"):
-   - Los cuatro colores son CATEGORÍAS, no estados: uno por familia de
-     hecho. Naranja = A personas, azul = Agua y tierra, ámbar =
-     Gestiones, verde = Logros. Nunca dicen "bien" o "mal".
-   - Cada color tiene tres formas: --marca para rellenar formas (franja,
-     disco, borde), --fuerte para texto y cifras sobre fondo claro
-     (4,5:1) y --tinte para fondos de etiqueta.
-   - Nunca texto blanco sobre un color de marca (el blanco sobre verde
-     da 1,7:1). Sobre el color va texto en --tinta.
-   - Tono "amigable, no confrontativo": no se usa rojo. */
 :root{
   --tinta:#212121; --tinta-2:#585350; --tinta-3:#7f7976;
   --fondo:#ffffff; --fondo-2:#f8f5f4; --linea:#e3dfde;
@@ -25,8 +7,7 @@
   --azul:#6dafdf;    --azul-fuerte:#287cb8;    --azul-tinte:#e6f1fa;
   --exito:#1f7a4d; --exito-tinte:#e8f7f0;
   --foco:#287cb8;
-  /* Nombres que ya usaba el resto de esta hoja, apuntando a la paleta nueva. */
-  --primary:var(--naranja-fuerte); --primary-c:var(--naranja-tinte); --on-primary-c:var(--tinta);
+    --primary:var(--naranja-fuerte); --primary-c:var(--naranja-tinte); --on-primary-c:var(--tinta);
   --acento:var(--naranja-fuerte); --acento-c:var(--naranja-tinte);
   --logro:var(--exito); --logro-c:var(--exito-tinte);
   --surface:var(--fondo); --surface-1:var(--fondo-2); --surface-2:#efeae8;
@@ -35,14 +16,9 @@
   --r-s:8px; --r-m:12px; --r-full:999px;
   --e1:0 1px 2px rgba(33,33,33,.06),0 2px 6px rgba(33,33,33,.05);
   --e2:0 2px 6px rgba(33,33,33,.07),0 8px 20px rgba(33,33,33,.07);
-  /* Diseño fluido: el margen lateral crece con la pantalla y el
-     contenido llega hasta 1920 px, para que en un monitor grande no
-     quede una columna angosta en el medio. */
-  --gutter:clamp(16px,4vw,72px); --ancho-max:1920px;
+    --gutter:clamp(16px,4vw,72px); --ancho-max:1920px;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
-/* Cada familia trae sus tres formas en variables locales: las piezas
-   (franja, tarjeta, disco, cifra) solo leen --f-marca/--f-fuerte/--f-tinte. */
 [data-familia="persona"]{--f-marca:var(--naranja);--f-fuerte:var(--naranja-fuerte);--f-tinte:var(--naranja-tinte)}
 [data-familia="territorio"]{--f-marca:var(--azul);--f-fuerte:var(--azul-fuerte);--f-tinte:var(--azul-tinte)}
 [data-familia="gestion"]{--f-marca:var(--ambar);--f-fuerte:var(--ambar-fuerte);--f-tinte:var(--ambar-tinte)}
@@ -51,20 +27,12 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface);line-height:1.55;font-size:15px}
-/* Más ancho que antes (760px) para que quepan dos tarjetas grandes por
-   fila en escritorio — ver .feed más abajo. */
 .envoltura{max-width:var(--ancho-max);margin:0 auto;padding:0 var(--gutter) 64px}
 
-/* Sistema de íconos — mismo criterio que app/ y panel/: el sprite no
-   se dibuja, el trazo (no el relleno) lleva el color. */
 .sprite{display:none}
 .i{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:2;
    stroke-linecap:round;stroke-linejoin:round}
 
-/* Menú superior — franja sólida propia, separada del paisaje del hero
-   (en la maqueta de referencia tampoco lleva el fondo ilustrado detrás,
-   es una barra plana). Mismo verde más oscuro que el tope del degradado
-   del hero, para que las dos franjas se sientan una sola pieza. */
 .franja-marca{display:grid;grid-template-columns:repeat(4,1fr);height:5px}
 .franja-marca i:nth-child(1){background:var(--naranja)}.franja-marca i:nth-child(2){background:var(--azul)}
 .franja-marca i:nth-child(3){background:var(--ambar)}.franja-marca i:nth-child(4){background:var(--verde)}
@@ -83,28 +51,14 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
   border:none;border-radius:var(--r-full);padding:8px 14px;cursor:pointer;text-decoration:none;transition:background .15s,color .15s}
 .nav-top__link:hover{background:rgba(255,255,255,.08);color:#fff}
 .nav-top__link--act{color:#fff;box-shadow:inset 0 -3px 0 var(--naranja);border-radius:0}
-/* Toast honesto para las secciones que todavía no existen ("Datos y
-   Tendencias", "Metodología", "Acerca de la Red") — en vez de un
-   enlace roto o un botón que no hace nada visible, dice con claridad
-   que está en definición con ACUA (Marco, 2026-09-20: se decide en la
-   próxima reunión con el cliente). */
 .nav-toast{position:fixed;left:50%;bottom:22px;translate:-50% 0;z-index:20;background:var(--on-surface);
   color:#fff;font-size:13px;padding:10px 18px;border-radius:var(--r-full);box-shadow:var(--e2);
   max-width:calc(100% - 32px);text-align:center;transition:opacity .2s,transform .2s}
 .nav-toast[hidden]{display:none}
 .nav-toast.oculto{opacity:0;transform:translate(-50%,6px)}
 
-/* Header — más alto y con el paisaje ilustrado de fondo a propósito:
-   Marco pidió que tuviera "mayor prominencia" y se sintiera
-   "emblemático e impactante" sin usar fotografías (no hay fotos reales
-   del territorio a mano, y una de banco de imágenes daría una idea
-   falsa de lugar). Alineado a la izquierda —no centrado como antes—
-   para acercarse a la maqueta de referencia que a Marco le gustó
-   (2026-09-20), con el mismo paisaje propio detrás. */
 .hero{position:relative;background:var(--tinta);color:#fff;
   padding:clamp(48px,7vw,120px) var(--gutter) clamp(36px,4vw,64px);overflow:hidden;isolation:isolate}
-/* Foto opcional (img/portada.jpg). La capa oscura es la que deja leer
-   el título encima de cualquier foto, como en el banner de PROLEMPA. */
 .hero-foto{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s}
 .hero--con-foto .hero-foto{opacity:1}
 .hero--con-foto .hero-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(33,33,33,.82),rgba(33,33,33,.45))}
@@ -152,8 +106,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
   text-shadow:0 1px 18px rgba(0,0,0,.18)}
 .hero-destacado{display:block;color:var(--naranja)}
 .hero p{font-size:clamp(16px,.35vw + 14.5px,20px);color:#e6e0de;max-width:60ch}
-/* Botón del banner: naranja de marca con texto en tinta. El blanco
-   sobre este naranja da 3,3:1, que no alcanza para texto chico. */
 .hero-boton{display:inline-block;margin-top:22px;background:var(--naranja);color:var(--tinta);font-weight:800;
   font-size:14.5px;padding:12px 24px;border-radius:var(--r-full);text-decoration:none;transition:filter .15s,transform .1s}
 .hero-boton:hover{filter:brightness(1.06)}
@@ -166,11 +118,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .hero .stats span{font-size:11px;color:#c9c2bf;text-transform:uppercase;letter-spacing:.05em}
 
 @media(max-width:480px){
-  /* h1 ya escala solo con clamp() — acá solo se ajusta lo que clamp
-     no cubre: el espaciado de las tarjetas de estadísticas, que con
-     el padding de escritorio (14px 22px) se ven apretadas en un
-     teléfono angosto. */
-  .hero .stats > div{padding:11px 16px}
+    .hero .stats > div{padding:11px 16px}
   .hero .stats b{font-size:22px}
 }
 
@@ -185,10 +133,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .filtro-pill:active{transform:translateY(0) scale(.97)}
 .filtro-pill{font-family:var(--sans)}
 .filtro-pill.act{border-color:var(--tinta);background:var(--tinta);color:#fff}
-/* Las cuatro franjas de familia, a sangre y con borde recto como los
-   bloques de PROLEMPA. Texto en tinta sobre el color de marca. La
-   elegida se marca con una barra inferior y el disco en negro, no solo
-   con color. */
 .franjas{display:grid;grid-template-columns:repeat(4,1fr)}
 .filtro-pill.franja{border:none;border-radius:0;background:var(--f-marca);color:var(--tinta);padding:clamp(16px,1.6vw,26px) clamp(14px,2vw,var(--gutter));
   font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:12px;justify-content:flex-start;
@@ -207,9 +151,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .filtro-select{border:1.5px solid var(--outline-var);border-radius:var(--r-full);padding:8px 15px;font-size:13px;
   font-family:var(--sans);background:var(--surface);color:var(--on-surface-var);margin-left:auto}
 
-/* Buscador — debajo de los pills, no dentro: en un teléfono angosto la
-   barra de pills ya va con scroll horizontal propio (ver el
-   @media al final), meterlo ahí adentro lo hacía desaparecer. */
 .buscar{display:flex;align-items:center;gap:9px;border:1.5px solid var(--outline-var);border-radius:var(--r-full);
   padding:9px 16px;margin:10px 0 4px;background:var(--surface);color:var(--on-surface-var)}
 .buscar:focus-within{border-color:var(--tinta)}
@@ -222,8 +163,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .seccion-cab p{font-size:12.5px;color:var(--on-surface-var);margin-top:2px}
 .seccion-cab__orden{font-size:11.5px;color:var(--on-surface-var);white-space:nowrap}
 
-/* Dos columnas en pantallas anchas — una sola en teléfono (ver el
-   @media al final). */
 .feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:clamp(14px,1.4vw,24px);margin-top:18px}
 .tarjeta{background:var(--surface);border:1px solid var(--outline-var);border-top:5px solid var(--f-marca,var(--linea));border-radius:var(--r-m);padding:22px;
   box-shadow:var(--e1);opacity:0;animation:tarjeta-entra .4s cubic-bezier(.16,.8,.3,1) forwards;
@@ -236,21 +175,11 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .tarjeta .icono{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none}
 .tarjeta .icono svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tarjeta .icono{background:var(--f-marca);color:var(--tinta)}
-/* Jerarquía dentro de la tarjeta: título como un titular de verdad,
-   claramente por encima del cuerpo. */
 .tarjeta .tipo{font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.25}
 .tarjeta .meta{font-size:12px;color:var(--on-surface-var);margin-top:2px}
-/* Insignia "Revisado por REDNA" — nunca "Verificado" a secas: lo único
-   que es cierto es que una persona de REDNA lo revisó y redactó antes
-   de publicarlo (regla 10, nada se publica solo). No prometer más de
-   lo que el sistema hace de verdad. */
 .tarjeta .revisado{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;margin-top:7px;
   color:var(--logro);background:var(--logro-c);border-radius:var(--r-full);padding:4px 10px;white-space:nowrap}
 .tarjeta .revisado .i{width:12px;height:12px}
-/* El resumen —lo único que se publica de lo que contó la comunidad—
-   con tratamiento de cita: borde a la izquierda, itálica, más grande.
-   Es el propio resumen_publico que ya redacta REDNA, nunca una frase
-   inventada aparte. */
 .tarjeta .resumen{font-size:15.5px;line-height:1.6;color:var(--on-surface);font-style:italic;
   border-left:3px solid var(--f-marca,var(--linea));padding-left:14px;margin:4px 0 14px;flex:1}
 .tarjeta .compartir{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--outline-var);padding-top:12px;margin-top:auto}
@@ -267,7 +196,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .vacio,.cargando,.error-carga{text-align:center;padding:50px 20px;color:var(--on-surface-var);font-size:14px}
 .error-carga{color:var(--acento)}
 
-/* Modal de bienvenida — primera visita. */
 #bienvenida{display:none;position:fixed;inset:0;background:rgba(10,25,22,.5);z-index:80;align-items:center;justify-content:center;padding:20px}
 #bienvenida.on{display:flex;animation:fade .2s}
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -283,7 +211,7 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 
 .pie{background:var(--tinta);color:#e6e0de;margin-top:clamp(40px,5vw,80px)}
 .pie__envoltura{max-width:var(--ancho-max);margin:0 auto;padding:clamp(36px,4vw,64px) var(--gutter) clamp(28px,3vw,44px);
-  display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px)}
+  display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:clamp(24px,3vw,48px)}
 .pie__nombre{display:flex;align-items:center;gap:11px;margin-bottom:14px}
 .pie__nombre strong{display:block;font-size:15px;font-weight:800;color:#fff}
 .pie__nombre span:not(.nav-top__icono){font-size:12px;color:#c9c2bf}
@@ -298,12 +226,9 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .pie__cuidado .i{width:17px;height:17px;flex:none;color:var(--verde);margin-top:1px}
 .pie__base{border-top:1px solid rgba(255,255,255,.1);max-width:var(--ancho-max);margin:0 auto;padding:16px var(--gutter) 22px;
   display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:#a8a09c;
-  padding-right:calc(var(--gutter) + 72px)} /* lugar para el botón flotante "volver arriba" */
-@media(max-width:1000px){.pie__envoltura{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  padding-right:calc(var(--gutter) + 72px)} @media(max-width:1000px){.pie__envoltura{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.pie__envoltura{grid-template-columns:1fr}}
 
-/* Botón flotante "volver arriba": el naranja de PROLEMPA, con ícono en
-   tinta (el blanco no alcanza contraste sobre este naranja). */
 .subir{position:fixed;right:clamp(14px,2.5vw,32px);bottom:clamp(14px,2.5vw,32px);z-index:15;width:52px;height:52px;
   border:none;border-radius:var(--r-full);background:var(--naranja);color:var(--tinta);padding:14px;cursor:pointer;
   box-shadow:0 4px 12px rgba(33,33,33,.22),0 1px 3px rgba(33,33,33,.18);transition:transform .18s,box-shadow .18s;
@@ -313,11 +238,6 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 .subir:active{transform:translateY(0) scale(.94)}
 @keyframes subir-entra{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
 
-/* --- Retoques (21 de octubre de 2026) ---------------------------------
-   Estados de interacción al estilo Material 3: al pasar el mouse una
-   capa sutil, al presionar un leve hundimiento, y siempre un anillo de
-   foco visible con teclado. Nada se mueve si la persona pidió menos
-   movimiento. */
 .hero-boton{display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(228,103,47,.35)}
 .hero-boton::after{content:"";width:16px;height:16px;flex:none;background:currentColor;
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5.5 12.5 12 19l6.5-6.5'/%3E%3C/svg%3E") center/contain no-repeat;

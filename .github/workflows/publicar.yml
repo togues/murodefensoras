@@ -30,3 +30,4 @@ jobs:
             js/core/**
             js/data/**
             pruebas/**
+            LEEME.md

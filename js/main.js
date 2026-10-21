@@ -1,14 +1,3 @@
-/* =====================================================================
-   Muro público — arranque. Sin maqueta previa (a diferencia de app/ y
-   panel/): primera pintura para que ACUA la vea y opine, no una
-   traducción de un diseño ya validado. Ver css/muro.css y el <title>
-   de index.html para lo que sigue sin definir (nombre, matiz exacto de
-   paleta).
-
-   SIN interacción (me gusta, comentarios): confirmado que no se pidió
-   para esta versión — pregunta abierta para la próxima conversación
-   con ACUA, no una omisión.
-   ===================================================================== */
 import { log } from './core/logger.js';
 import { obtenerMuro, obtenerEstadisticas, obtenerCatalogos } from './data/api-client.js';
 
@@ -16,8 +5,6 @@ const NOMBRE_FAMILIA = { persona: 'A personas', territorio: 'Agua y tierra', ges
 const NOMBRE_MES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const POR_PAGINA = 12;
 
-// Mismo sprite que app/ y panel/ (ver el <svg class="sprite"> al inicio
-// de index.html) — antes cada familia tenía su trazo SVG suelto acá.
 const ICONOS = { persona: 'i-persona', territorio: 'i-gota', gestion: 'i-carta', logro: 'i-estrella' };
 
 let filtroFamilia = 'todos';
@@ -45,10 +32,6 @@ function botonesCompartir(p) {
     { id: 'wa', nombre: 'WhatsApp', href: `https://wa.me/?text=${texto}` },
     { id: 'fb', nombre: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}&quote=${encodeURIComponent(textoCompartir(p))}` }
   ];
-  // Instagram no tiene una URL pública para compartir un texto — solo
-  // se puede desde su propia app. navigator.share() sí puede ofrecer
-  // Instagram entre las opciones del teléfono cuando existe; por eso
-  // el botón "Compartir" nativo se agrega aparte, no en vez de estos.
   const iconoCompartir = '<svg class="i"><use href="#i-compartir"/></svg>';
   let html = botones.map((b) => `<a class="btn-compartir" href="${b.href}" target="_blank" rel="noopener">${iconoCompartir}${b.nombre}</a>`).join('');
   if (navigator.share) {
@@ -58,27 +41,13 @@ function botonesCompartir(p) {
 }
 
 function tarjeta(p, i) {
-  // --i alimenta el retraso escalonado de la entrada (tarjeta-entra en
-  // muro.css) — sin esto todas aparecen a la vez, que se siente menos
-  // vivo que una lista que se va revelando.
-  //
-  // "Revisado por REDNA" en toda tarjeta, sin condición: llegar hasta
-  // acá ya exige `reporte.publicado = TRUE`, y eso solo pasa después de
-  // que alguien de REDNA lo redactó y aprobó (regla 10, "nada se
-  // publica solo") — no es una insignia opcional, es lo que siempre es
-  // cierto de cualquier tarjeta en este feed.
-  //
-  // El resumen va en <blockquote>: es literalmente una cita de lo que
-  // REDNA redactó a partir del relato —nunca el relato original, que
-  // no sale de acá (regla 6)— y semánticamente es una cita, no un
-  // párrafo cualquiera.
   return `<article class="tarjeta" data-familia="${p.familia}" style="--i:${i}">
     <div class="fila-cab">
       ${iconoTarjeta(p)}
       <div>
         <div class="tipo">${p.tipo}</div>
         <div class="meta">${[p.canton, p.departamento].filter(Boolean).join(', ')}${p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : ''}</div>
-        <span class="revisado"><svg class="i"><use href="#i-check-circulo"/></svg>Revisado por REDNA</span>
+        <span class="revisado"><svg class="i"><use href="#i-check-circulo"/></svg>Revisado antes de publicarse</span>
       </div>
     </div>
     <blockquote class="resumen">${p.resumen_publico}</blockquote>
@@ -86,15 +55,9 @@ function tarjeta(p, i) {
   </article>`;
 }
 
-// Mismo patrón que las fichas PDF ya usadas en otras pantallas del
-// proyecto: la ventana se abre ANTES de armar el contenido —acá no hay
-// await de por medio, pero se mantiene el orden por costumbre del
-// patrón— para que el navegador nunca la trate como popup no
-// solicitado. Solo datos que YA son públicos (los mismos de la
-// tarjeta): nada de coordenada, nada de folio, nada del relato original.
 function abrirFichaPdf(p) {
   const ventana = window.open('', '_blank');
-  if (!ventana) return; // bloqueador de ventanas emergentes — no hay nada más que hacer acá
+  if (!ventana) return;
   const meta = [p.canton, p.departamento].filter(Boolean).join(', ') + (p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : '');
   ventana.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 <title>${p.tipo} — Observatorio Comunitario</title>
@@ -106,14 +69,13 @@ function abrirFichaPdf(p) {
   .sello{display:inline-block;font-size:11px;font-weight:700;color:#2c6e49;background:#eaf3ec;border-radius:99px;padding:4px 12px;margin-bottom:20px}
   .pie{font-size:11px;color:#777;border-top:1px solid #ddd;padding-top:12px;margin-top:32px}
 </style></head><body>
-<span class="sello">Revisado por REDNA</span>
+<span class="sello">Revisado antes de publicarse</span>
 <h1>${p.tipo}</h1>
 <div class="meta">${meta}</div>
 <blockquote>${p.resumen_publico}</blockquote>
 <div class="pie">
-  Observatorio Comunitario de Vulneraciones de Derechos a Personas Defensoras — ACUA,
-  con acompañamiento de Ingeniería Sin Fronteras y la Agencia Catalana de Cooperación al Desarrollo.<br>
-  Este resumen fue redactado y revisado por REDNA antes de publicarse; no incluye ubicación exacta,
+  Observatorio Comunitario de Vulneraciones de Derechos a Personas Defensoras.<br>
+  Este resumen fue redactado y revisado por el equipo del observatorio antes de publicarse; no incluye ubicación exacta,
   nombres ni ningún otro dato que permita identificar a las personas involucradas.
 </div>
 </body></html>`);
@@ -121,10 +83,6 @@ function abrirFichaPdf(p) {
   ventana.onload = () => ventana.print();
 }
 
-// Confirmación breve tras compartir de verdad (el diálogo nativo del
-// sistema ya cerró, así que la persona necesita alguna señal de que
-// sí se compartió). Vuelve sola al estado normal — no hace falta que
-// nadie la cierre.
 function confirmarCompartido(boton) {
   const original = boton.innerHTML;
   boton.classList.add('hecho');
@@ -208,9 +166,6 @@ function enlazarFiltros() {
   });
 }
 
-// Debounce de 350ms — sin esto cada tecla dispara una petición nueva
-// contra /publico/muro, y la respuesta de la tecla anterior puede
-// llegar después y pisar la de la más reciente.
 function enlazarBusqueda() {
   const input = document.getElementById('buscar-input');
   let temporizador;
@@ -232,10 +187,6 @@ async function cargarDepartamentos() {
   select.insertAdjacentHTML('beforeend', departamentos.map((d) => `<option value="${d.id}">${d.nombre}</option>`).join(''));
 }
 
-// Los mismos conteos alimentan el minitablero del hero Y el número
-// dentro de cada pill de filtro — una sola llamada a
-// /publico/estadisticas (ya agregada, umbral k≥5) en vez de una
-// petición aparte solo para las badges.
 function pintarConteosPills(totalPorFamilia) {
   const total = Object.values(totalPorFamilia).reduce((a, b) => a + b, 0);
   const elTodos = document.querySelector('.filtro-pill__n[data-conteo="todos"]');
@@ -255,14 +206,11 @@ async function cargarHeroStats() {
   }
   pintarConteosPills(totalPorFamilia);
   const items = Object.entries(totalPorFamilia).map(([familia, total]) => ({ n: total, t: NOMBRE_FAMILIA[familia] || familia, i: ICONOS[familia] || ICONOS.gestion, familia }));
-  if (!items.length) return; // ningún grupo llegó al umbral de 5 todavía — no hay nada honesto que mostrar
+  if (!items.length) return;
   document.getElementById('hero-stats').innerHTML = items.map((it) => `<div data-familia="${it.familia}"><svg class="i"><use href="#${it.i}"/></svg><b data-cuenta="${it.n}">0</b><span>${it.t}</span></div>`).join('');
   document.querySelectorAll('#hero-stats b[data-cuenta]').forEach(animarConteo);
 }
 
-// Cuenta de 0 al valor real en unos 700ms — un número que aparece ya
-// hecho no se siente, uno que sube sí. `prefers-reduced-motion` lo deja
-// directo en el valor final, como el resto de las animaciones acá.
 function animarConteo(el) {
   const destino = Number(el.dataset.cuenta);
   if (!destino || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -273,7 +221,7 @@ function animarConteo(el) {
   const inicio = performance.now();
   function paso(ahora) {
     const avance = Math.min(1, (ahora - inicio) / duracion);
-    el.textContent = Math.round(destino * (1 - (1 - avance) ** 3)); // ease-out
+    el.textContent = Math.round(destino * (1 - (1 - avance) ** 3));
     if (avance < 1) requestAnimationFrame(paso);
   }
   requestAnimationFrame(paso);
@@ -293,11 +241,6 @@ function enlazarBienvenida() {
   });
 }
 
-// Botones del menú superior que todavía no llevan a ninguna pantalla
-// real ("Datos y Tendencias", "Metodología", "Acerca de la Red" — ver
-// el comentario en index.html). Un timer de módulo, no uno por click:
-// si la persona hace clic dos veces seguido en botones distintos, el
-// toast debe reiniciar su cuenta, no ocultarse a la mitad.
 let temporizadorToast;
 function enlazarMenuSuperior() {
   const toast = document.getElementById('nav-toast');
@@ -321,9 +264,6 @@ function enlazarSombraFiltros() {
   actualizar();
 }
 
-// Foto de portada opcional (img/portada.jpg): solo si existe de verdad
-// se pone detrás del banner; si no, queda el paisaje ilustrado. Así se
-// puede probar una foto subiendo un solo archivo, sin tocar código.
 function cargarFotoPortada() {
   const foto = new Image();
   foto.onload = () => {
@@ -336,8 +276,6 @@ function cargarFotoPortada() {
 cargarFotoPortada();
 enlazarFiltros();
 enlazarBusqueda();
-// Botón flotante "volver arriba" (el naranja de PROLEMPA): aparece
-// cuando ya se bajó un buen trecho, no antes.
 function enlazarSubir() {
   const boton = document.getElementById('subir');
   const actualizar = () => { boton.hidden = window.scrollY < 700; };
