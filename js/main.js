@@ -128,7 +128,7 @@ function abrirFichaPdf(p) {
 </style></head><body>
 <div class="franja"><i></i><i></i><i></i><i></i></div>
 <div class="cab">
-  <div><strong>Observatorio Comunitario</strong><span>Vulneraciones de Derechos a Personas Defensoras</span></div>
+  <div><strong>Observatorio Comunitario</strong></div>
   <span class="etiqueta">Ficha de caso</span>
 </div>
 <div class="titulo">
