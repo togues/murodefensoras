@@ -31,27 +31,9 @@ function lugar(p) {
   return [p.canton, p.departamento].filter(Boolean).join(', ');
 }
 
-function textoCompartir(p) {
-  return `${p.tipo} — ${lugar(p)}. ${p.resumen_publico}`;
-}
-
-function enlacesCompartir(p) {
-  const texto = encodeURIComponent(textoCompartir(p) + '\n\n' + location.href);
-  return [
-    { nombre: 'WhatsApp', icono: 'i-whatsapp', href: `https://wa.me/?text=${texto}` },
-    { nombre: 'Facebook', icono: 'i-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}&quote=${encodeURIComponent(textoCompartir(p))}` }
-  ];
-}
-
-function botonesCompartir(p, conTexto) {
+function botonPdf(p, conTexto) {
   const clase = conTexto ? 'btn-compartir' : 'btn-icono';
-  const etiqueta = (nombre) => (conTexto ? nombre : '');
-  let html = enlacesCompartir(p).map((b) => `<a class="${clase}" href="${b.href}" target="_blank" rel="noopener" aria-label="Compartir en ${b.nombre}" title="Compartir en ${b.nombre}"><svg class="i"><use href="#${b.icono}"/></svg>${etiqueta(b.nombre)}</a>`).join('');
-  if (navigator.share) {
-    html += `<button type="button" class="${clase}" data-compartir-nativo="${p.id}" aria-label="Compartir" title="Compartir"><svg class="i"><use href="#i-compartir"/></svg>${etiqueta('Compartir')}</button>`;
-  }
-  html += `<button type="button" class="${clase}" data-pdf="${p.id}" aria-label="Descargar la ficha en PDF" title="Descargar la ficha en PDF"><svg class="i"><use href="#i-descargar"/></svg>${etiqueta('Ficha PDF')}</button>`;
-  return html;
+  return `<button type="button" class="${clase}" data-pdf="${p.id}" aria-label="Descargar la ficha en PDF" title="Descargar la ficha en PDF"><svg class="i"><use href="#i-descargar"/></svg>${conTexto ? 'Ficha PDF' : ''}</button>`;
 }
 
 function tarjeta(p, i) {
@@ -67,7 +49,7 @@ function tarjeta(p, i) {
     <blockquote class="resumen">${esc(p.resumen_publico)}</blockquote>
     <div class="acciones">
       <button type="button" class="btn-ver" data-ver="${p.id}">Ver el caso completo</button>
-      <div class="compartir">${botonesCompartir(p, false)}</div>
+      <div class="compartir">${botonPdf(p, false)}</div>
     </div>
   </article>`;
 }
@@ -102,7 +84,7 @@ function abrirFicha(p, origen) {
       <dl class="ficha__datos">${filasDatos(p).map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
       <p class="ficha__nota"><svg class="i"><use href="#i-escudo"/></svg>Lo cuenta la comunidad y lo revisó el equipo del observatorio antes de publicarlo: se quitaron nombres, lugares exactos y todo lo que pueda identificar a una persona.</p>
     </div>
-    <footer class="ficha__pie">${botonesCompartir(p, true)}</footer>`;
+    <footer class="ficha__pie">${botonPdf(p, true)}</footer>`;
   enlazarAcciones(ficha, [p]);
   ficha.showModal();
   ficha.querySelector('.ficha__cerrar').focus();
@@ -170,16 +152,6 @@ function abrirFichaPdf(p) {
 
 function enlazarAcciones(raiz, publicaciones) {
   const buscar = (id) => publicaciones.find((pub) => String(pub.id) === id);
-  raiz.querySelectorAll('[data-compartir-nativo]').forEach((boton) => {
-    boton.addEventListener('click', async () => {
-      const p = buscar(boton.dataset.compartirNativo);
-      if (!p) return;
-      try {
-        await navigator.share({ text: textoCompartir(p), url: location.href });
-        confirmarCompartido(boton);
-      } catch { return; }
-    });
-  });
   raiz.querySelectorAll('[data-pdf]').forEach((boton) => {
     boton.addEventListener('click', () => {
       const p = buscar(boton.dataset.pdf);
@@ -192,16 +164,6 @@ function enlazarAcciones(raiz, publicaciones) {
       if (p) abrirFicha(p, boton);
     });
   });
-}
-
-function confirmarCompartido(boton) {
-  const original = boton.innerHTML;
-  boton.classList.add('hecho');
-  boton.innerHTML = boton.classList.contains('btn-icono') ? '<svg class="i"><use href="#i-check"/></svg>' : '<svg class="i"><use href="#i-check"/></svg>Compartido';
-  setTimeout(() => {
-    boton.classList.remove('hecho');
-    boton.innerHTML = original;
-  }, 1800);
 }
 
 async function cargarFeed() {

@@ -58,9 +58,10 @@ await paso('filtro_departamento_se_llena_con_datos_reales', async () => {
   if (!opciones.some((o) => o.includes('Usulut'))) throw new Error('no apareció un departamento real: ' + opciones.join(', '));
 });
 
-await paso('boton_whatsapp_apunta_a_wa_me_con_el_resumen', async () => {
-  const href = await p.locator('.tarjeta .compartir a').first().getAttribute('href');
-  if (!href.startsWith('https://wa.me/')) throw new Error('el botón de WhatsApp no apunta a wa.me: ' + href);
+await paso('sin_botones_de_redes_sociales', async () => {
+  const enlaces = await p.locator('a[href*="wa.me"], a[href*="facebook.com"], [data-compartir-nativo]').count();
+  if (enlaces) throw new Error('quedan ' + enlaces + ' botones de redes sociales');
+  if (!(await p.locator('.tarjeta [data-pdf]').count())) throw new Error('falta el botón de la ficha PDF');
 });
 
 await paso('ver_caso_completo_abre_la_ficha_con_todo_el_texto', async () => {
