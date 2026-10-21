@@ -100,7 +100,7 @@ function abrirFicha(p, origen) {
       <p class="ficha__relato">${esc(p.resumen_publico)}</p>
       <h3>Datos del caso</h3>
       <dl class="ficha__datos">${filasDatos(p).map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-      <p class="ficha__nota"><svg class="i"><use href="#i-escudo"/></svg>Este texto lo redactó el equipo del observatorio a partir de lo que contó la comunidad. No incluye nombres, ubicación exacta ni nada que identifique a una persona.</p>
+      <p class="ficha__nota"><svg class="i"><use href="#i-escudo"/></svg>Lo cuenta la comunidad y lo revisó el equipo del observatorio antes de publicarlo: se quitaron nombres, lugares exactos y todo lo que pueda identificar a una persona.</p>
     </div>
     <footer class="ficha__pie">${botonesCompartir(p, true)}</footer>`;
   enlazarAcciones(ficha, [p]);
@@ -160,7 +160,7 @@ function abrirFichaPdf(p) {
 <h2>Datos del caso</h2>
 <table>${filasDatos(p).map(([k, v]) => `<tr><th>${k}</th><td>${esc(v)}</td></tr>`).join('')}</table>
 <div class="pie">
-  <span>Texto redactado y revisado por el equipo del observatorio antes de publicarse. No incluye nombres, ubicación exacta ni ningún dato que permita identificar a las personas involucradas.</span>
+  <span>Texto contado por la comunidad y revisado por el equipo del observatorio antes de publicarse: se quitaron nombres, lugares exactos y cualquier dato que permita identificar a las personas involucradas.</span>
   <span style="white-space:nowrap">Emitida el ${hoy}</span>
 </div>
 </body></html>`);

@@ -12,8 +12,9 @@ van **sin comentarios**: cualquiera puede ver su código fuente.
 - Las publicaciones dicen "Revisado antes de publicarse" / "el equipo del
   observatorio", nunca el nombre de quien revisa.
 - Cada publicación trae solo: tipo de hecho, familia, cantón o
-  departamento, mes y año, y el resumen redactado por el equipo. Nunca el
-  relato, la comunidad, el punto exacto, las fotos ni el folio.
+  departamento, mes y año, y el texto revisado por el administrador (decisión
+  09: parte del relato, corregido y sin datos que identifiquen). Nunca la
+  comunidad, el punto exacto, las fotos ni el folio.
 
 ## Paleta
 
