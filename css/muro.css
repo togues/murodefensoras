@@ -1,0 +1,286 @@
+/* Muro público.
+
+   PALETA (21 de octubre de 2026): el cliente dijo que los colores del
+   muro "estaban tristes". Marco tomó la paleta de PROLEMPA (CARE
+   Honduras): naranja #e4672f, verde #b6d066, ámbar #e0b34f, azul
+   #6dafdf y el negro institucional #212121. Se toma SOLO la paleta; la
+   tipografía sigue siendo la nuestra.
+
+   Reglas que vienen con la paleta (sistema "Lempa"):
+   - Los cuatro colores son CATEGORÍAS, no estados: uno por familia de
+     hecho. Naranja = A personas, azul = Agua y tierra, ámbar =
+     Gestiones, verde = Logros. Nunca dicen "bien" o "mal".
+   - Cada color tiene tres formas: --marca para rellenar formas (franja,
+     disco, borde), --fuerte para texto y cifras sobre fondo claro
+     (4,5:1) y --tinte para fondos de etiqueta.
+   - Nunca texto blanco sobre un color de marca (el blanco sobre verde
+     da 1,7:1). Sobre el color va texto en --tinta.
+   - Tono "amigable, no confrontativo": no se usa rojo. */
+:root{
+  --tinta:#212121; --tinta-2:#585350; --tinta-3:#7f7976;
+  --fondo:#ffffff; --fondo-2:#f8f5f4; --linea:#e3dfde;
+  --naranja:#e4672f; --naranja-fuerte:#c9501a; --naranja-tinte:#faece6;
+  --verde:#b6d066;   --verde-fuerte:#697e27;   --verde-tinte:#f5fae6;
+  --ambar:#e0b34f;   --ambar-fuerte:#97701b;   --ambar-tinte:#faf3e6;
+  --azul:#6dafdf;    --azul-fuerte:#287cb8;    --azul-tinte:#e6f1fa;
+  --exito:#1f7a4d; --exito-tinte:#e8f7f0;
+  --foco:#287cb8;
+  /* Nombres que ya usaba el resto de esta hoja, apuntando a la paleta nueva. */
+  --primary:var(--naranja-fuerte); --primary-c:var(--naranja-tinte); --on-primary-c:var(--tinta);
+  --acento:var(--naranja-fuerte); --acento-c:var(--naranja-tinte);
+  --logro:var(--exito); --logro-c:var(--exito-tinte);
+  --surface:var(--fondo); --surface-1:var(--fondo-2); --surface-2:#efeae8;
+  --on-surface:var(--tinta); --on-surface-var:var(--tinta-2);
+  --outline-var:var(--linea);
+  --r-s:8px; --r-m:12px; --r-full:999px;
+  --e1:0 1px 2px rgba(33,33,33,.06),0 2px 6px rgba(33,33,33,.05);
+  --e2:0 2px 6px rgba(33,33,33,.07),0 8px 20px rgba(33,33,33,.07);
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+/* Cada familia trae sus tres formas en variables locales: las piezas
+   (franja, tarjeta, disco, cifra) solo leen --f-marca/--f-fuerte/--f-tinte. */
+[data-familia="persona"]{--f-marca:var(--naranja);--f-fuerte:var(--naranja-fuerte);--f-tinte:var(--naranja-tinte)}
+[data-familia="territorio"]{--f-marca:var(--azul);--f-fuerte:var(--azul-fuerte);--f-tinte:var(--azul-tinte)}
+[data-familia="gestion"]{--f-marca:var(--ambar);--f-fuerte:var(--ambar-fuerte);--f-tinte:var(--ambar-tinte)}
+[data-familia="logro"]{--f-marca:var(--verde);--f-fuerte:var(--verde-fuerte);--f-tinte:var(--verde-tinte)}
+:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface);line-height:1.55;font-size:15px}
+/* Más ancho que antes (760px) para que quepan dos tarjetas grandes por
+   fila en escritorio — ver .feed más abajo. */
+.envoltura{max-width:1080px;margin:0 auto;padding:0 16px 60px}
+
+/* Sistema de íconos — mismo criterio que app/ y panel/: el sprite no
+   se dibuja, el trazo (no el relleno) lleva el color. */
+.sprite{display:none}
+.i{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:2;
+   stroke-linecap:round;stroke-linejoin:round}
+
+/* Menú superior — franja sólida propia, separada del paisaje del hero
+   (en la maqueta de referencia tampoco lleva el fondo ilustrado detrás,
+   es una barra plana). Mismo verde más oscuro que el tope del degradado
+   del hero, para que las dos franjas se sientan una sola pieza. */
+.franja-marca{display:grid;grid-template-columns:repeat(4,1fr);height:5px}
+.franja-marca i:nth-child(1){background:var(--naranja)}.franja-marca i:nth-child(2){background:var(--azul)}
+.franja-marca i:nth-child(3){background:var(--ambar)}.franja-marca i:nth-child(4){background:var(--verde)}
+.nav-top{background:var(--tinta);color:#fff}
+.nav-top__envoltura{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;flex-wrap:wrap}
+.nav-top__marca{display:flex;align-items:center;gap:11px}
+.nav-top__icono{width:34px;height:34px;border-radius:50%;background:var(--naranja);color:var(--tinta);
+  display:grid;place-items:center;flex:none}
+.nav-top__icono .i{width:18px;height:18px}
+.nav-top__nombre{display:flex;flex-direction:column;line-height:1.25}
+.nav-top__nombre strong{font-size:13.5px;font-weight:800;letter-spacing:.01em}
+.nav-top__nombre span{font-size:11px;color:#c9c2bf}
+.nav-top__links{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nav-top__link{font-family:var(--sans);font-size:13px;font-weight:600;color:#e6e0de;background:transparent;
+  border:none;border-radius:var(--r-full);padding:8px 14px;cursor:pointer;text-decoration:none;transition:background .15s,color .15s}
+.nav-top__link:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-top__link--act{color:#fff;box-shadow:inset 0 -3px 0 var(--naranja);border-radius:0}
+/* Toast honesto para las secciones que todavía no existen ("Datos y
+   Tendencias", "Metodología", "Acerca de la Red") — en vez de un
+   enlace roto o un botón que no hace nada visible, dice con claridad
+   que está en definición con ACUA (Marco, 2026-09-20: se decide en la
+   próxima reunión con el cliente). */
+.nav-toast{position:fixed;left:50%;bottom:22px;translate:-50% 0;z-index:20;background:var(--on-surface);
+  color:#fff;font-size:13px;padding:10px 18px;border-radius:var(--r-full);box-shadow:var(--e2);
+  max-width:calc(100% - 32px);text-align:center;transition:opacity .2s,transform .2s}
+.nav-toast[hidden]{display:none}
+.nav-toast.oculto{opacity:0;transform:translate(-50%,6px)}
+
+/* Header — más alto y con el paisaje ilustrado de fondo a propósito:
+   Marco pidió que tuviera "mayor prominencia" y se sintiera
+   "emblemático e impactante" sin usar fotografías (no hay fotos reales
+   del territorio a mano, y una de banco de imágenes daría una idea
+   falsa de lugar). Alineado a la izquierda —no centrado como antes—
+   para acercarse a la maqueta de referencia que a Marco le gustó
+   (2026-09-20), con el mismo paisaje propio detrás. */
+.hero{position:relative;background:var(--tinta);color:#fff;
+  padding:64px 16px 40px;overflow:hidden;isolation:isolate}
+/* Foto opcional (img/portada.jpg). La capa oscura es la que deja leer
+   el título encima de cualquier foto, como en el banner de PROLEMPA. */
+.hero-foto{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s}
+.hero--con-foto .hero-foto{opacity:1}
+.hero--con-foto .hero-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(33,33,33,.82),rgba(33,33,33,.45))}
+.hero--con-foto .hero-paisaje{display:none}
+.hero-paisaje{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hero-paisaje .monte{stroke:none}
+.hero-paisaje .monte--lejos{fill:var(--verde)}
+.hero-paisaje .monte--cerca{fill:var(--ambar)}
+.hero-paisaje .monte--lejos{opacity:.05;animation:monte-respira-lejos 16s ease-in-out infinite}
+.hero-paisaje .monte--cerca{opacity:.07;animation:monte-respira-cerca 13s ease-in-out infinite .8s}
+.hero-paisaje .rio{fill:none;stroke:var(--azul);stroke-width:2.5;stroke-linecap:round;opacity:.16;
+  stroke-dasharray:7 11;animation:rio-fluye 3.2s linear infinite,rio-respira 9s ease-in-out infinite}
+.hero-paisaje .arboles{fill:var(--verde);stroke:var(--verde);stroke-width:2;stroke-linecap:round;opacity:.13}
+.arbol-mece{animation:arbol-mece 5s ease-in-out infinite}
+.arboles g:nth-child(2) .arbol-mece{animation-duration:6s;animation-delay:.4s}
+.arboles g:nth-child(3) .arbol-mece{animation-duration:4.4s;animation-delay:1.1s}
+.arboles g:nth-child(4) .arbol-mece{animation-duration:5.6s;animation-delay:.2s}
+.arboles g:nth-child(5) .arbol-mece{animation-duration:4.8s;animation-delay:1.6s}
+.arboles g:nth-child(6) .arbol-mece{animation-duration:6.4s;animation-delay:.7s}
+.arboles g:nth-child(7) .arbol-mece{animation-duration:5.2s;animation-delay:1.3s}
+.hero-paisaje .pajaro{fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.22}
+.hero-paisaje .pajaro--1{animation:pajaro-vuela-1 22s linear infinite}
+.hero-paisaje .pajaro--2{animation:pajaro-vuela-2 27s linear infinite 4s}
+
+@keyframes monte-respira-lejos{0%,100%{opacity:.05}50%{opacity:.08}}
+@keyframes monte-respira-cerca{0%,100%{opacity:.07}50%{opacity:.1}}
+@keyframes rio-fluye{to{stroke-dashoffset:-36px}}
+@keyframes rio-respira{0%,100%{opacity:.14}50%{opacity:.22}}
+@keyframes arbol-mece{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+@keyframes pajaro-vuela-1{0%{transform:translate(0,0)}50%{transform:translate(140px,-16px)}100%{transform:translate(280px,0)}}
+@keyframes pajaro-vuela-2{0%{transform:translate(0,0)}50%{transform:translate(-120px,10px)}100%{transform:translate(-240px,0)}}
+@media(prefers-reduced-motion:reduce){
+  .hero-paisaje .monte,.hero-paisaje .rio,.arbol-mece,.hero-paisaje .pajaro{animation:none}
+}
+
+.hero-resplandor{position:absolute;top:-14%;left:6%;width:520px;max-width:90%;
+  aspect-ratio:1.6;background:radial-gradient(ellipse at center,rgba(228,103,47,.16),transparent 70%);
+  z-index:0;pointer-events:none}
+.hero-contenido{position:relative;z-index:1;max-width:1080px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
+  color:#f1ecea;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  border-radius:var(--r-full);padding:5px 13px 5px 11px;margin-bottom:16px}
+.hero-eyebrow__punto{width:6px;height:6px;border-radius:50%;background:var(--naranja);flex:none}
+.hero h1{font-size:clamp(32px,3vw + 26px,54px);font-weight:800;letter-spacing:-.02em;max-width:620px;margin:0 0 16px;line-height:1.05;
+  text-shadow:0 1px 18px rgba(0,0,0,.18)}
+.hero-destacado{display:block;color:var(--naranja)}
+.hero p{font-size:16.5px;color:#e6e0de;max-width:560px}
+/* Botón del banner: naranja de marca con texto en tinta. El blanco
+   sobre este naranja da 3,3:1, que no alcanza para texto chico. */
+.hero-boton{display:inline-block;margin-top:22px;background:var(--naranja);color:var(--tinta);font-weight:800;
+  font-size:14.5px;padding:12px 24px;border-radius:var(--r-full);text-decoration:none;transition:filter .15s,transform .1s}
+.hero-boton:hover{filter:brightness(1.06)}
+.hero-boton:active{transform:scale(.98)}
+.hero .stats{display:flex;justify-content:flex-start;gap:14px;margin-top:28px;flex-wrap:wrap}
+.hero .stats > div{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);border-top:3px solid var(--f-marca,#fff);border-radius:var(--r-m);padding:14px 22px;backdrop-filter:blur(2px)}
+.hero .stats .i{width:20px;height:20px;color:var(--f-marca,#fff);margin-bottom:6px}
+.hero .stats b{display:block;font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--f-marca,#fff)}
+.hero .stats span{font-size:11px;color:#c9c2bf;text-transform:uppercase;letter-spacing:.05em}
+
+@media(max-width:480px){
+  .hero{padding:44px 16px 26px}
+  /* h1 ya escala solo con clamp() — acá solo se ajusta lo que clamp
+     no cubre: el espaciado de las tarjetas de estadísticas, que con
+     el padding de escritorio (14px 22px) se ven apretadas en un
+     teléfono angosto. */
+  .hero .stats > div{padding:11px 16px}
+  .hero .stats b{font-size:22px}
+}
+
+.filtros{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:18px 0 6px;position:sticky;top:0;
+  background:var(--surface-1);z-index:5;transition:box-shadow .2s}
+.filtros.sombra{box-shadow:0 4px 14px rgba(10,25,22,.09);border-bottom:1px solid var(--outline-var)}
+.filtro-pill{border:1.5px solid var(--outline-var);border-radius:var(--r-full);padding:8px 15px 8px 12px;font-size:13px;
+  color:var(--on-surface-var);cursor:pointer;background:var(--surface);user-select:none;transition:.15s;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex:none}
+.filtro-pill .i{width:14px;height:14px;flex:none}
+.filtro-pill:hover{border-color:var(--primary);transform:translateY(-1px)}
+.filtro-pill:active{transform:translateY(0) scale(.97)}
+.filtro-pill{font-family:var(--sans)}
+.filtro-pill.act{border-color:var(--tinta);background:var(--tinta);color:#fff}
+/* Las cuatro franjas de familia, a sangre y con borde recto como los
+   bloques de PROLEMPA. Texto en tinta sobre el color de marca. La
+   elegida se marca con una barra inferior y el disco en negro, no solo
+   con color. */
+.franjas{display:grid;grid-template-columns:repeat(4,1fr)}
+.filtro-pill.franja{border:none;border-radius:0;background:var(--f-marca);color:var(--tinta);padding:20px 22px;
+  font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:12px;justify-content:flex-start;
+  box-shadow:inset 0 -5px 0 transparent;transition:box-shadow .15s,filter .15s}
+.filtro-pill.franja:hover{transform:none;filter:brightness(1.05)}
+.filtro-pill.franja.act{background:var(--f-marca);color:var(--tinta);box-shadow:inset 0 -5px 0 var(--tinta)}
+.franja__disco{width:42px;height:42px;border-radius:50%;background:#fff;color:var(--f-fuerte);display:grid;place-items:center;flex:none;padding:10px}
+.filtro-pill.franja.act .franja__disco{background:var(--tinta);color:#fff}
+.franja__texto{flex:1;text-align:left;white-space:normal;line-height:1.2}
+.filtro-pill.franja .filtro-pill__n{background:rgba(33,33,33,.14);color:var(--tinta);font-size:12.5px;padding:2px 9px}
+@media(max-width:760px){.franjas{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:380px){.filtro-pill.franja{padding:16px 14px;font-size:14px}.franja__disco{width:36px;height:36px;padding:8px}}
+.filtro-pill__n{background:rgba(0,0,0,.08);border-radius:var(--r-full);padding:1px 7px;font-size:11px;font-weight:700}
+.filtro-pill.act .filtro-pill__n{background:rgba(0,0,0,.12)}
+.filtro-pill__n:empty{display:none}
+.filtro-select{border:1.5px solid var(--outline-var);border-radius:var(--r-full);padding:8px 15px;font-size:13px;
+  font-family:var(--sans);background:var(--surface);color:var(--on-surface-var);margin-left:auto}
+
+/* Buscador — debajo de los pills, no dentro: en un teléfono angosto la
+   barra de pills ya va con scroll horizontal propio (ver el
+   @media al final), meterlo ahí adentro lo hacía desaparecer. */
+.buscar{display:flex;align-items:center;gap:9px;border:1.5px solid var(--outline-var);border-radius:var(--r-full);
+  padding:9px 16px;margin:10px 0 4px;background:var(--surface);color:var(--on-surface-var)}
+.buscar:focus-within{border-color:var(--tinta)}
+.buscar .i{width:16px;height:16px;flex:none}
+.buscar input{border:none;outline:none;flex:1;font-family:var(--sans);font-size:13.5px;background:transparent;color:var(--on-surface)}
+
+.seccion-cab{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;
+  margin-top:22px;padding-bottom:10px;border-bottom:1px solid var(--outline-var)}
+.seccion-cab h2{font-size:18px;font-weight:800;letter-spacing:-.01em}
+.seccion-cab p{font-size:12.5px;color:var(--on-surface-var);margin-top:2px}
+.seccion-cab__orden{font-size:11.5px;color:var(--on-surface-var);white-space:nowrap}
+
+/* Dos columnas en pantallas anchas — una sola en teléfono (ver el
+   @media al final). */
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:16px}
+.tarjeta{background:var(--surface);border:1px solid var(--outline-var);border-top:5px solid var(--f-marca,var(--linea));border-radius:var(--r-m);padding:22px;
+  box-shadow:var(--e1);opacity:0;animation:tarjeta-entra .4s cubic-bezier(.16,.8,.3,1) forwards;
+  animation-delay:calc(var(--i, 0) * 45ms);transition:transform .16s,box-shadow .16s;
+  display:flex;flex-direction:column;position:relative}
+.tarjeta:hover{transform:translateY(-2px);box-shadow:var(--e2)}
+@keyframes tarjeta-entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.tarjeta{animation:none;opacity:1}}
+.tarjeta .fila-cab{display:flex;align-items:flex-start;gap:11px;margin-bottom:12px}
+.tarjeta .icono{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none}
+.tarjeta .icono svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tarjeta .icono{background:var(--f-marca);color:var(--tinta)}
+/* Jerarquía dentro de la tarjeta: título como un titular de verdad,
+   claramente por encima del cuerpo. */
+.tarjeta .tipo{font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.25}
+.tarjeta .meta{font-size:12px;color:var(--on-surface-var);margin-top:2px}
+/* Insignia "Revisado por REDNA" — nunca "Verificado" a secas: lo único
+   que es cierto es que una persona de REDNA lo revisó y redactó antes
+   de publicarlo (regla 10, nada se publica solo). No prometer más de
+   lo que el sistema hace de verdad. */
+.tarjeta .revisado{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;margin-top:7px;
+  color:var(--logro);background:var(--logro-c);border-radius:var(--r-full);padding:4px 10px;white-space:nowrap}
+.tarjeta .revisado .i{width:12px;height:12px}
+/* El resumen —lo único que se publica de lo que contó la comunidad—
+   con tratamiento de cita: borde a la izquierda, itálica, más grande.
+   Es el propio resumen_publico que ya redacta REDNA, nunca una frase
+   inventada aparte. */
+.tarjeta .resumen{font-size:15.5px;line-height:1.6;color:var(--on-surface);font-style:italic;
+  border-left:3px solid var(--f-marca,var(--linea));padding-left:14px;margin:4px 0 14px;flex:1}
+.tarjeta .compartir{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--outline-var);padding-top:12px;margin-top:auto}
+.btn-compartir{border:none;background:var(--surface-2);color:var(--on-surface-var);border-radius:var(--r-full);
+  padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--sans);text-decoration:none;transition:background .15s,transform .1s}
+.btn-compartir:hover{background:var(--f-tinte,var(--naranja-tinte));color:var(--tinta)}
+.btn-compartir:active{transform:scale(.95)}
+.btn-compartir svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-compartir.hecho{background:var(--logro-c);color:var(--logro)}
+.btn-compartir.btn-pdf{margin-left:auto;background:transparent;border:1.5px solid var(--outline-var)}
+.btn-compartir.btn-pdf:hover{border-color:var(--primary)}
+
+.vacio,.cargando,.error-carga{text-align:center;padding:50px 20px;color:var(--on-surface-var);font-size:14px}
+.error-carga{color:var(--acento)}
+
+/* Modal de bienvenida — primera visita. */
+#bienvenida{display:none;position:fixed;inset:0;background:rgba(10,25,22,.5);z-index:80;align-items:center;justify-content:center;padding:20px}
+#bienvenida.on{display:flex;animation:fade .2s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+#bienvenida .caja{background:var(--surface);border-radius:var(--r-m);max-width:420px;width:100%;padding:26px;box-shadow:var(--e2);text-align:center;
+  animation:bienvenida-entra .25s cubic-bezier(.16,.8,.3,1)}
+@keyframes bienvenida-entra{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.bienvenida-icono{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;
+  background:var(--naranja);color:var(--tinta);margin:0 auto 14px;padding:13px}
+#bienvenida h2{font-size:19px;font-weight:800;margin-bottom:10px;color:var(--tinta)}
+#bienvenida p{font-size:13.5px;color:var(--on-surface-var);margin-bottom:8px}
+#bienvenida button{margin-top:14px;background:var(--naranja);color:var(--tinta);border:none;border-radius:var(--r-full);
+  padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+
+.pie{text-align:center;padding:30px 16px;font-size:12px;color:var(--on-surface-var)}
+
+@media(max-width:480px){
+  .filtros{overflow-x:auto;flex-wrap:nowrap;padding-bottom:12px}
+  .filtro-select{margin-left:0}
+}

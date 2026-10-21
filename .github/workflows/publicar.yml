@@ -1,0 +1,32 @@
+name: Publicar avance
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # El muro ya estaba publicado a mano y funcionando cuando se creó
+      # este repositorio (21 de octubre de 2026). Para no tocar nada de lo
+      # que ya anda, se publican SOLO index.html, css/ y js/main.js. La
+      # configuración (js/config/), la conexión con la API (js/data/,
+      # js/core/) y las pruebas quedan como están en el servidor. Si algún
+      # día se cambia uno de esos archivos, hay que sacarlo de esta lista.
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: mi3-ss103.a2hosting.com
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftps
+          local-dir: ./
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            js/config/**
+            js/core/**
+            js/data/**
+            pruebas/**
