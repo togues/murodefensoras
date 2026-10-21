@@ -281,7 +281,66 @@ body{font-family:var(--sans);background:var(--surface-1);color:var(--on-surface)
 #bienvenida button{margin-top:14px;background:var(--naranja);color:var(--tinta);border:none;border-radius:var(--r-full);
   padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans)}
 
-.pie{text-align:center;padding:30px 16px;font-size:12px;color:var(--on-surface-var)}
+.pie{background:var(--tinta);color:#e6e0de;margin-top:clamp(40px,5vw,80px)}
+.pie__envoltura{max-width:var(--ancho-max);margin:0 auto;padding:clamp(36px,4vw,64px) var(--gutter) clamp(28px,3vw,44px);
+  display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px)}
+.pie__nombre{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.pie__nombre strong{display:block;font-size:15px;font-weight:800;color:#fff}
+.pie__nombre span:not(.nav-top__icono){font-size:12px;color:#c9c2bf}
+.pie__marca p{font-size:14px;line-height:1.65;color:#c9c2bf;max-width:42ch}
+.pie__col h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--naranja);margin-bottom:14px}
+.pie__col a,.pie__col button{display:block;background:none;border:none;padding:4px 0;font:inherit;font-size:14px;color:#e6e0de;
+  text-decoration:none;cursor:pointer;text-align:left;transition:color .15s,transform .15s}
+.pie__col a:hover,.pie__col button:hover{color:#fff;transform:translateX(3px)}
+.pie__org{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px}
+.pie__con{font-size:12px;color:#c9c2bf;margin:10px 0 6px}
+.pie__cuidado{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.5;color:#e6e0de;margin-bottom:10px}
+.pie__cuidado .i{width:17px;height:17px;flex:none;color:var(--verde);margin-top:1px}
+.pie__base{border-top:1px solid rgba(255,255,255,.1);max-width:var(--ancho-max);margin:0 auto;padding:16px var(--gutter) 22px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:#a8a09c;
+  padding-right:calc(var(--gutter) + 72px)} /* lugar para el botón flotante "volver arriba" */
+@media(max-width:1000px){.pie__envoltura{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.pie__envoltura{grid-template-columns:1fr}}
+
+/* Botón flotante "volver arriba": el naranja de PROLEMPA, con ícono en
+   tinta (el blanco no alcanza contraste sobre este naranja). */
+.subir{position:fixed;right:clamp(14px,2.5vw,32px);bottom:clamp(14px,2.5vw,32px);z-index:15;width:52px;height:52px;
+  border:none;border-radius:var(--r-full);background:var(--naranja);color:var(--tinta);padding:14px;cursor:pointer;
+  box-shadow:0 4px 12px rgba(33,33,33,.22),0 1px 3px rgba(33,33,33,.18);transition:transform .18s,box-shadow .18s;
+  animation:subir-entra .22s cubic-bezier(.16,.8,.3,1)}
+.subir[hidden]{display:none}
+.subir:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(33,33,33,.26)}
+.subir:active{transform:translateY(0) scale(.94)}
+@keyframes subir-entra{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
+
+/* --- Retoques (21 de octubre de 2026) ---------------------------------
+   Estados de interacción al estilo Material 3: al pasar el mouse una
+   capa sutil, al presionar un leve hundimiento, y siempre un anillo de
+   foco visible con teclado. Nada se mueve si la persona pidió menos
+   movimiento. */
+.hero-boton{display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(228,103,47,.35)}
+.hero-boton::after{content:"";width:16px;height:16px;flex:none;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5.5 12.5 12 19l6.5-6.5'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5.5 12.5 12 19l6.5-6.5'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:transform .18s}
+.hero-boton:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(228,103,47,.4)}
+.hero-boton:hover::after{transform:translateY(2px)}
+.hero .stats > div{transition:transform .18s,background .18s}
+.hero .stats > div:hover{transform:translateY(-2px);background:rgba(255,255,255,.1)}
+.nav-top__link:focus-visible,.hero-boton:focus-visible,.subir:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.franja__disco{transition:transform .2s cubic-bezier(.16,.8,.3,1),background .15s,color .15s;box-shadow:0 1px 3px rgba(33,33,33,.18)}
+.filtro-pill.franja:hover .franja__disco{transform:scale(1.08)}
+.filtro-pill.franja:active .franja__disco{transform:scale(.96)}
+.filtro-pill.franja:focus-visible{outline:3px solid var(--tinta);outline-offset:-6px}
+.tarjeta:focus-within{box-shadow:var(--e2)}
+.tarjeta .tipo{color:var(--tinta)}
+.tarjeta .revisado{font-weight:600}
+.btn-compartir:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
+.seccion-cab h2{font-size:clamp(19px,.6vw + 15px,24px)}
+@media(prefers-reduced-motion:reduce){
+  .hero-boton,.hero-boton::after,.hero .stats > div,.franja__disco,.subir,.pie__col a,.pie__col button{transition:none;animation:none}
+  .hero-boton:hover,.hero .stats > div:hover,.subir:hover,.pie__col a:hover,.pie__col button:hover{transform:none}
+}
 
 @media(max-width:480px){
   .filtros{overflow-x:auto;flex-wrap:nowrap;padding-bottom:12px}

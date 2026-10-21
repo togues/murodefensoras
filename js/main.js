@@ -336,7 +336,21 @@ function cargarFotoPortada() {
 cargarFotoPortada();
 enlazarFiltros();
 enlazarBusqueda();
+// Botón flotante "volver arriba" (el naranja de PROLEMPA): aparece
+// cuando ya se bajó un buen trecho, no antes.
+function enlazarSubir() {
+  const boton = document.getElementById('subir');
+  const actualizar = () => { boton.hidden = window.scrollY < 700; };
+  document.addEventListener('scroll', actualizar, { passive: true });
+  boton.addEventListener('click', () => {
+    const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: suave ? 'smooth' : 'auto' });
+  });
+  actualizar();
+}
+
 enlazarMenuSuperior();
+enlazarSubir();
 enlazarBienvenida();
 enlazarSombraFiltros();
 log('muro: arranque');

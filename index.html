@@ -28,6 +28,8 @@
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.8 12.6 4.8 4.8 9.6-10.8"/></symbol>
   <symbol id="i-check-circulo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="m8.2 12.2 2.6 2.6 5-5.4"/></symbol>
   <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.7-4.7"/></symbol>
+  <symbol id="i-arriba" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5.5 11.5 6.5-6.5 6.5 6.5"/></symbol>
+  <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3.4 5 6v5.4c0 4.4 2.9 7.9 7 9.2 4.1-1.3 7-4.8 7-9.2V6z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
   <symbol id="i-descargar" viewBox="0 0 24 24"><path d="M12 3.4v10.2"/><path d="m7.8 9.6 4.2 4.2 4.2-4.2"/><path d="M4.2 16.2v2.6a1.8 1.8 0 0 0 1.8 1.8h12a1.8 1.8 0 0 0 1.8-1.8v-2.6"/></symbol>
 </defs></svg>
 
@@ -142,10 +144,48 @@
   <div id="paginacion" style="text-align:center;margin-top:16px"></div>
 </div>
 
-<div class="pie">
-  Observatorio Comunitario de Vulneraciones de Derechos a Personas Defensoras<br>
-  Un proyecto de ACUA, con acompañamiento de Ingeniería Sin Fronteras y la Agencia Catalana de Cooperación al Desarrollo.
-</div>
+<!-- Pie institucional (21 de octubre de 2026): cierra la página con el
+     negro institucional y la franja de cuatro colores. Solo dice cosas
+     ciertas: quién hace el proyecto y cómo se cuida la información. Sin
+     datos de contacto: no hay ninguno definido todavía. -->
+<footer class="pie">
+  <div class="franja-marca" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="pie__envoltura">
+    <div class="pie__marca">
+      <div class="pie__nombre">
+        <span class="nav-top__icono"><svg class="i"><use href="#i-comunidad"/></svg></span>
+        <div><strong>Observatorio Comunitario</strong><span>Vulneraciones a Personas Defensoras</span></div>
+      </div>
+      <p>Un espacio para dejar constancia de lo que viven y lo que logran las comunidades que defienden el agua y el territorio.</p>
+    </div>
+    <nav class="pie__col" aria-label="Secciones">
+      <h2>El observatorio</h2>
+      <a href="#registro">Voces del Territorio</a>
+      <button type="button" data-proximamente>Datos y Tendencias</button>
+      <button type="button" data-proximamente>Metodología</button>
+      <button type="button" data-proximamente>Acerca de la Red</button>
+    </nav>
+    <div class="pie__col">
+      <h2>Un proyecto de</h2>
+      <p class="pie__org">ACUA</p>
+      <p class="pie__con">Con el acompañamiento de</p>
+      <p class="pie__org">Ingeniería Sin Fronteras</p>
+      <p class="pie__org">Agencia Catalana de Cooperación al Desarrollo</p>
+    </div>
+    <div class="pie__col">
+      <h2>Cómo cuidamos la información</h2>
+      <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Nada de lo publicado identifica a una persona.</p>
+      <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Cada publicación la revisa y la redacta REDNA.</p>
+      <p class="pie__cuidado"><svg class="i"><use href="#i-escudo"/></svg>Nunca se muestra el lugar exacto, solo el cantón o el departamento.</p>
+    </div>
+  </div>
+  <div class="pie__base">
+    <span>Observatorio Comunitario de Vulneraciones de Derechos a Personas Defensoras · 2026</span>
+    <span>Publicado con revisión humana</span>
+  </div>
+</footer>
+
+<button type="button" class="subir" id="subir" aria-label="Volver arriba" hidden><svg class="i"><use href="#i-arriba"/></svg></button>
 
 <div id="bienvenida">
   <div class="caja">
