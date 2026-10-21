@@ -59,8 +59,20 @@ await paso('filtro_departamento_se_llena_con_datos_reales', async () => {
 });
 
 await paso('boton_whatsapp_apunta_a_wa_me_con_el_resumen', async () => {
-  const href = await p.locator('.tarjeta .btn-compartir').first().getAttribute('href');
+  const href = await p.locator('.tarjeta .compartir a').first().getAttribute('href');
   if (!href.startsWith('https://wa.me/')) throw new Error('el botón de WhatsApp no apunta a wa.me: ' + href);
+});
+
+await paso('ver_caso_completo_abre_la_ficha_con_todo_el_texto', async () => {
+  const resumen = await p.locator('.tarjeta .resumen').first().textContent();
+  await p.locator('.tarjeta .btn-ver').first().click();
+  await p.waitForSelector('#ficha[open]', { timeout: 3000 });
+  const relato = await p.locator('#ficha .ficha__relato').textContent();
+  if (relato.trim() !== resumen.trim()) throw new Error('la ficha no muestra el mismo texto completo');
+  if (!(await p.locator('#ficha .ficha__datos dd').count())) throw new Error('la ficha no trae datos del caso');
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(150);
+  if (await p.locator('#ficha[open]').count()) throw new Error('Esc no cerró la ficha');
 });
 
 await paso('hero_muestra_estadisticas_agregadas_reales', async () => {

@@ -12,8 +12,13 @@ let filtroDepartamento = '';
 let filtroBusqueda = '';
 let paginaActual = 1;
 
+const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, (c) => ESC[c]);
+}
+
 function iconoTarjeta(p) {
-  return `<span class="icono ${p.naturaleza}" data-familia="${p.familia}"><svg class="i"><use href="#${ICONOS[p.familia] || ICONOS.gestion}"/></svg></span>`;
+  return `<span class="icono ${esc(p.naturaleza)}" data-familia="${esc(p.familia)}"><svg class="i"><use href="#${ICONOS[p.familia] || ICONOS.gestion}"/></svg></span>`;
 }
 
 function formatoMes(mesHecho) {
@@ -22,71 +27,177 @@ function formatoMes(mesHecho) {
   return `${NOMBRE_MES[Number(mes) - 1]} de ${anio}`;
 }
 
-function textoCompartir(p) {
-  return `${p.tipo} — ${p.canton ? p.canton + ', ' : ''}${p.departamento || ''}. ${p.resumen_publico}`;
+function lugar(p) {
+  return [p.canton, p.departamento].filter(Boolean).join(', ');
 }
 
-function botonesCompartir(p) {
+function textoCompartir(p) {
+  return `${p.tipo} — ${lugar(p)}. ${p.resumen_publico}`;
+}
+
+function enlacesCompartir(p) {
   const texto = encodeURIComponent(textoCompartir(p) + '\n\n' + location.href);
-  const botones = [
-    { id: 'wa', nombre: 'WhatsApp', href: `https://wa.me/?text=${texto}` },
-    { id: 'fb', nombre: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}&quote=${encodeURIComponent(textoCompartir(p))}` }
+  return [
+    { nombre: 'WhatsApp', icono: 'i-whatsapp', href: `https://wa.me/?text=${texto}` },
+    { nombre: 'Facebook', icono: 'i-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}&quote=${encodeURIComponent(textoCompartir(p))}` }
   ];
-  const iconoCompartir = '<svg class="i"><use href="#i-compartir"/></svg>';
-  let html = botones.map((b) => `<a class="btn-compartir" href="${b.href}" target="_blank" rel="noopener">${iconoCompartir}${b.nombre}</a>`).join('');
+}
+
+function botonesCompartir(p, conTexto) {
+  const clase = conTexto ? 'btn-compartir' : 'btn-icono';
+  const etiqueta = (nombre) => (conTexto ? nombre : '');
+  let html = enlacesCompartir(p).map((b) => `<a class="${clase}" href="${b.href}" target="_blank" rel="noopener" aria-label="Compartir en ${b.nombre}" title="Compartir en ${b.nombre}"><svg class="i"><use href="#${b.icono}"/></svg>${etiqueta(b.nombre)}</a>`).join('');
   if (navigator.share) {
-    html += `<button class="btn-compartir" data-compartir-nativo="${p.id}">${iconoCompartir}Compartir</button>`;
+    html += `<button type="button" class="${clase}" data-compartir-nativo="${p.id}" aria-label="Compartir" title="Compartir"><svg class="i"><use href="#i-compartir"/></svg>${etiqueta('Compartir')}</button>`;
   }
+  html += `<button type="button" class="${clase}" data-pdf="${p.id}" aria-label="Descargar la ficha en PDF" title="Descargar la ficha en PDF"><svg class="i"><use href="#i-descargar"/></svg>${etiqueta('Ficha PDF')}</button>`;
   return html;
 }
 
 function tarjeta(p, i) {
-  return `<article class="tarjeta" data-familia="${p.familia}" style="--i:${i}">
+  return `<article class="tarjeta" data-familia="${esc(p.familia)}" style="--i:${i}">
     <div class="fila-cab">
       ${iconoTarjeta(p)}
       <div>
-        <div class="tipo">${p.tipo}</div>
-        <div class="meta">${[p.canton, p.departamento].filter(Boolean).join(', ')}${p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : ''}</div>
+        <div class="tipo">${esc(p.tipo)}</div>
+        <div class="meta">${esc(lugar(p))}${p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : ''}</div>
         <span class="revisado"><svg class="i"><use href="#i-check-circulo"/></svg>Revisado antes de publicarse</span>
       </div>
     </div>
-    <blockquote class="resumen">${p.resumen_publico}</blockquote>
-    <div class="compartir">${botonesCompartir(p)}<button class="btn-compartir btn-pdf" data-pdf="${p.id}"><svg class="i"><use href="#i-descargar"/></svg>Ficha PDF</button></div>
+    <blockquote class="resumen">${esc(p.resumen_publico)}</blockquote>
+    <div class="acciones">
+      <button type="button" class="btn-ver" data-ver="${p.id}">Ver el caso completo</button>
+      <div class="compartir">${botonesCompartir(p, false)}</div>
+    </div>
   </article>`;
+}
+
+function filasDatos(p) {
+  return [
+    ['Tipo de hecho', p.tipo],
+    ['Categoría', NOMBRE_FAMILIA[p.familia] || p.familia],
+    ['Departamento', p.departamento],
+    ['Cantón', p.canton],
+    ['Cuándo ocurrió', formatoMes(p.mes_hecho)]
+  ].filter(([, v]) => v);
+}
+
+function abrirFicha(p, origen) {
+  const ficha = document.getElementById('ficha');
+  ficha.dataset.familia = p.familia;
+  ficha.querySelector('.ficha__cuerpo').innerHTML = `
+    <header class="ficha__cab">
+      <span class="ficha__disco"><svg class="i"><use href="#${ICONOS[p.familia] || ICONOS.gestion}"/></svg></span>
+      <div>
+        <span class="ficha__familia">${esc(NOMBRE_FAMILIA[p.familia] || p.familia)}</span>
+        <h2 id="ficha-titulo">${esc(p.tipo)}</h2>
+        <p class="ficha__meta">${esc(lugar(p))}${p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : ''}</p>
+      </div>
+    </header>
+    <div class="ficha__contenido">
+      <span class="revisado"><svg class="i"><use href="#i-check-circulo"/></svg>Revisado antes de publicarse</span>
+      <h3>Lo que pasó</h3>
+      <p class="ficha__relato">${esc(p.resumen_publico)}</p>
+      <h3>Datos del caso</h3>
+      <dl class="ficha__datos">${filasDatos(p).map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+      <p class="ficha__nota"><svg class="i"><use href="#i-escudo"/></svg>Este texto lo redactó el equipo del observatorio a partir de lo que contó la comunidad. No incluye nombres, ubicación exacta ni nada que identifique a una persona.</p>
+    </div>
+    <footer class="ficha__pie">${botonesCompartir(p, true)}</footer>`;
+  enlazarAcciones(ficha, [p]);
+  ficha.showModal();
+  ficha.querySelector('.ficha__cerrar').focus();
+  ficha.addEventListener('close', () => origen?.focus(), { once: true });
+}
+
+function enlazarFicha() {
+  const ficha = document.getElementById('ficha');
+  ficha.querySelector('.ficha__cerrar').addEventListener('click', () => ficha.close());
+  ficha.addEventListener('click', (e) => { if (e.target === ficha) ficha.close(); });
 }
 
 function abrirFichaPdf(p) {
   const ventana = window.open('', '_blank');
   if (!ventana) return;
-  const meta = [p.canton, p.departamento].filter(Boolean).join(', ') + (p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : '');
+  const color = { persona: '#e4672f', territorio: '#6dafdf', gestion: '#e0b34f', logro: '#b6d066' }[p.familia] || '#e3dfde';
+  const hoy = new Date().toLocaleDateString('es-SV', { day: 'numeric', month: 'long', year: 'numeric' });
   ventana.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>${p.tipo} — Observatorio Comunitario</title>
+<title>${esc(p.tipo)} — Ficha de caso</title>
 <style>
-  body{font-family:Georgia,'Times New Roman',serif;max-width:640px;margin:40px auto;padding:0 24px;color:#1c1c1c;line-height:1.6}
-  h1{font-size:22px;margin:0 0 4px}
-  .meta{font-size:13px;color:#555;margin-bottom:22px}
-  blockquote{font-style:italic;border-left:3px solid #2c6e49;padding-left:16px;margin:0 0 26px;font-size:16px}
-  .sello{display:inline-block;font-size:11px;font-weight:700;color:#2c6e49;background:#eaf3ec;border-radius:99px;padding:4px 12px;margin-bottom:20px}
-  .pie{font-size:11px;color:#777;border-top:1px solid #ddd;padding-top:12px;margin-top:32px}
+  @page{size:letter;margin:18mm 16mm}
+  *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#212121;max-width:720px;margin:24px auto;padding:0 20px;line-height:1.55;font-size:13px}
+  .franja{display:grid;grid-template-columns:repeat(4,1fr);height:6px;margin-bottom:14px}
+  .franja i:nth-child(1){background:#e4672f}.franja i:nth-child(2){background:#6dafdf}.franja i:nth-child(3){background:#e0b34f}.franja i:nth-child(4){background:#b6d066}
+  .cab{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:2px solid #212121;padding-bottom:10px}
+  .cab strong{display:block;font-size:14px}
+  .cab span{font-size:11px;color:#585350}
+  .etiqueta{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#585350}
+  .titulo{margin:22px 0 18px;padding:16px 18px;border-left:8px solid ${color};background:#f8f5f4;border-radius:0 8px 8px 0}
+  .titulo .etiqueta{color:#212121}
+  h1{font-size:24px;margin:4px 0 2px;letter-spacing:-.01em}
+  .meta{font-size:13px;color:#585350}
+  .sello{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;color:#1f7a4d;background:#e8f7f0;border-radius:99px;padding:3px 11px}
+  h2{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:22px 0 8px;color:#585350}
+  .relato{font-size:14.5px;line-height:1.7;white-space:pre-line;margin:0}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #e3dfde;vertical-align:top}
+  th{width:34%;font-weight:600;color:#585350}
+  .pie{margin-top:30px;padding-top:12px;border-top:1px solid #e3dfde;font-size:10.5px;color:#7f7976;display:flex;justify-content:space-between;gap:16px}
 </style></head><body>
-<span class="sello">Revisado antes de publicarse</span>
-<h1>${p.tipo}</h1>
-<div class="meta">${meta}</div>
-<blockquote>${p.resumen_publico}</blockquote>
+<div class="franja"><i></i><i></i><i></i><i></i></div>
+<div class="cab">
+  <div><strong>Observatorio Comunitario</strong><span>Vulneraciones de Derechos a Personas Defensoras</span></div>
+  <span class="etiqueta">Ficha de caso</span>
+</div>
+<div class="titulo">
+  <span class="etiqueta">${esc(NOMBRE_FAMILIA[p.familia] || p.familia)}</span>
+  <h1>${esc(p.tipo)}</h1>
+  <div class="meta">${esc(lugar(p))}${p.mes_hecho ? ' · ' + formatoMes(p.mes_hecho) : ''}</div>
+  <span class="sello">Revisado antes de publicarse</span>
+</div>
+<h2>Lo que pasó</h2>
+<p class="relato">${esc(p.resumen_publico)}</p>
+<h2>Datos del caso</h2>
+<table>${filasDatos(p).map(([k, v]) => `<tr><th>${k}</th><td>${esc(v)}</td></tr>`).join('')}</table>
 <div class="pie">
-  Observatorio Comunitario de Vulneraciones de Derechos a Personas Defensoras.<br>
-  Este resumen fue redactado y revisado por el equipo del observatorio antes de publicarse; no incluye ubicación exacta,
-  nombres ni ningún otro dato que permita identificar a las personas involucradas.
+  <span>Texto redactado y revisado por el equipo del observatorio antes de publicarse. No incluye nombres, ubicación exacta ni ningún dato que permita identificar a las personas involucradas.</span>
+  <span style="white-space:nowrap">Emitida el ${hoy}</span>
 </div>
 </body></html>`);
   ventana.document.close();
   ventana.onload = () => ventana.print();
 }
 
+function enlazarAcciones(raiz, publicaciones) {
+  const buscar = (id) => publicaciones.find((pub) => String(pub.id) === id);
+  raiz.querySelectorAll('[data-compartir-nativo]').forEach((boton) => {
+    boton.addEventListener('click', async () => {
+      const p = buscar(boton.dataset.compartirNativo);
+      if (!p) return;
+      try {
+        await navigator.share({ text: textoCompartir(p), url: location.href });
+        confirmarCompartido(boton);
+      } catch { return; }
+    });
+  });
+  raiz.querySelectorAll('[data-pdf]').forEach((boton) => {
+    boton.addEventListener('click', () => {
+      const p = buscar(boton.dataset.pdf);
+      if (p) abrirFichaPdf(p);
+    });
+  });
+  raiz.querySelectorAll('[data-ver]').forEach((boton) => {
+    boton.addEventListener('click', () => {
+      const p = buscar(boton.dataset.ver);
+      if (p) abrirFicha(p, boton);
+    });
+  });
+}
+
 function confirmarCompartido(boton) {
   const original = boton.innerHTML;
   boton.classList.add('hecho');
-  boton.innerHTML = '<svg class="i"><use href="#i-check"/></svg>Compartido';
+  boton.innerHTML = boton.classList.contains('btn-icono') ? '<svg class="i"><use href="#i-check"/></svg>' : '<svg class="i"><use href="#i-check"/></svg>Compartido';
   setTimeout(() => {
     boton.classList.remove('hecho');
     boton.innerHTML = original;
@@ -113,23 +224,7 @@ async function cargarFeed() {
     ? publicaciones.map(tarjeta).join('')
     : '<p class="vacio">Todavía no hay publicaciones con este filtro.</p>';
 
-  feed.querySelectorAll('[data-compartir-nativo]').forEach((boton) => {
-    boton.addEventListener('click', async () => {
-      const p = publicaciones.find((pub) => String(pub.id) === boton.dataset.compartirNativo);
-      if (!p) return;
-      try {
-        await navigator.share({ text: textoCompartir(p), url: location.href });
-        confirmarCompartido(boton);
-      } catch { /* la persona canceló el diálogo del sistema — no es un error */ }
-    });
-  });
-
-  feed.querySelectorAll('[data-pdf]').forEach((boton) => {
-    boton.addEventListener('click', () => {
-      const p = publicaciones.find((pub) => String(pub.id) === boton.dataset.pdf);
-      if (p) abrirFichaPdf(p);
-    });
-  });
+  enlazarAcciones(feed, publicaciones);
 
   pintarPaginacion(total);
 }
@@ -184,7 +279,7 @@ async function cargarDepartamentos() {
   if (!r.ok) return;
   const select = document.getElementById('filtro-departamento');
   const departamentos = (r.data.departamentos || []).slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
-  select.insertAdjacentHTML('beforeend', departamentos.map((d) => `<option value="${d.id}">${d.nombre}</option>`).join(''));
+  select.insertAdjacentHTML('beforeend', departamentos.map((d) => `<option value="${d.id}">${esc(d.nombre)}</option>`).join(''));
 }
 
 function pintarConteosPills(totalPorFamilia) {
@@ -288,6 +383,7 @@ function enlazarSubir() {
 }
 
 enlazarMenuSuperior();
+enlazarFicha();
 enlazarSubir();
 enlazarBienvenida();
 enlazarSombraFiltros();
