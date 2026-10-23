@@ -177,7 +177,7 @@ async function cargarFeed() {
 
   const r = await obtenerMuro(filtros);
   if (!r.ok) {
-    feed.innerHTML = `<p class="error-carga">No se pudo cargar: ${r.error}</p>`;
+    feed.innerHTML = `<p class="error-carga">No se pudo cargar: ${esc(r.error)}</p>`;
     return;
   }
 
