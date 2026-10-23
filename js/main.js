@@ -321,16 +321,6 @@ function enlazarSombraFiltros() {
   actualizar();
 }
 
-function cargarFotoPortada() {
-  const foto = new Image();
-  foto.onload = () => {
-    document.getElementById('hero').classList.add('hero--con-foto');
-    document.querySelector('.hero-foto').style.backgroundImage = `url("${foto.src}")`;
-  };
-  foto.src = 'img/portada.jpg';
-}
-
-cargarFotoPortada();
 enlazarFiltros();
 enlazarBusqueda();
 function enlazarSubir() {
