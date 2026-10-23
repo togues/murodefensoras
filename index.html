@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Política de contenido: el navegador solo corre los scripts de este
+     sitio. Si alguien lograra colar código en un texto publicado, no se
+     ejecuta. Los estilos en línea se permiten (la ficha PDF los usa); la
+     API local de desarrollo va aparte porque vive en otro puerto. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:8080; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title>Voces del Territorio — Observatorio Comunitario</title>
 <meta name="description" content="Necesidades y logros de las comunidades del territorio, contados por quienes los viven.">
 <link rel="stylesheet" href="css/muro.css">
